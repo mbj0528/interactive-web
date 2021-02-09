@@ -1,7 +1,6 @@
 import './App.css';
 import {useState} from 'react';
 import Card from './card/Card';
-import Circle from './circle/Circle';
 
 //////////////////
 
@@ -17,6 +16,7 @@ import Circle from './circle/Circle';
 // export default App;
 
 function App() {
+    const centerPos = {x:window.innerWidth / 2, y:window.outerHeight + 100};
     // const [moveAngle, setMoveAngle] = useState(0);
     // var isActive = false;
     // var fromX, fromY;
@@ -41,17 +41,22 @@ function App() {
 	// 	}
 	// });
     const [position, setPosition] = useState({
-        x: 50,
-        y: 50,
+        x: 0,
+        y: 0,
         active: false,
         offset: { }
     });
+    const [degree, setDegree] = useState(0);
+
     const handleMouseDown = e => {
-        const el = e.target;
-        const bbox = e.target.getBoundingClientRect();
-        const x = e.clientX - bbox.left;
-        const y = e.clientY - bbox.top;
-        el.setPointerCapture(e.pointerId);
+        
+        // const el = e.target;
+        // const bbox = e.target.getBoundingClientRect();
+        // const x = e.clientX - bbox.left;
+        // const y = e.clientY - bbox.top;
+        // el.setPointerCapture(e.pointerId);
+        const x = e.clientX;
+        const y = e.clientY;
         setPosition({
         ...position,
         active: true,
@@ -62,15 +67,25 @@ function App() {
         });
     };
     const handleMouseMove = e => {
-        const bbox = e.target.getBoundingClientRect();
-        const x = e.clientX - bbox.left;
-        const y = e.clientY - bbox.top;
+        
+        // const bbox = e.target.getBoundingClientRect();
+        // const x = e.clientX - bbox.left;
+        // const y = e.clientY - bbox.top;
+        // const bbox = e.target.getBoundingClientRect();
+        const x = e.clientX;
+        const y = e.clientY;
         if (position.active) {
-        setPosition({
-            ...position,
-            x: position.x - (position.offset.x - x),
-            y: position.y - (position.offset.y - y)
-        });
+            setPosition({
+                ...position,
+                // x: position.x - (position.offset.x - x),
+                // y: position.y - (position.offset.y - y),
+                x: x,
+                y: y,
+            });
+            var fromAngle = toDegree(Math.atan2(position.offset.y - centerPos.y, position.offset.x - centerPos.x))
+            var toAngle = toDegree(Math.atan2(position.y - centerPos.y, position.x - centerPos.x));
+            setDegree(toAngle-fromAngle);
+            console.log(degree)
         }
     };
     const handleMouseUp = e => {
@@ -80,11 +95,11 @@ function App() {
         });
     };
 
-    const colors = ["red", "orange", "yellow", "green", "blue", "navy", "purple", "black", "green"];
+    const colors = ["red", "orange", "yellow", "green", "blue",  "yellow", "green", "blue", "navy", "purple", "black", "blue", "purple", "red", "orange", "green", "navy", "blue", "yellow", "purple", "orange"];
     // const colors = ["red", "orange", "yellow", "green", "blue", "navy"];
     var interval = 360/(colors.length);
     var rotate = -interval;
-    const centerPos = 400;
+    
     var translateX = 0;
     var translateY = 0;
     
@@ -93,16 +108,17 @@ function App() {
         // translateX = Math.floor(200*Math.cos(toRadians(rotate+moveAngle))) + centerPos;
         // translateY = Math.floor(200*Math.sin(toRadians(rotate+moveAngle))) + centerPos;
         // return <Card translateX={translateX} translateY={translateY} rotate={rotate-90+moveAngle} color={value} />
-        translateX = Math.floor(200*Math.cos(toRadians(rotate))) + centerPos;
-        translateY = Math.floor(200*Math.sin(toRadians(rotate))) + centerPos;
-        return <Card translateX={translateX} translateY={translateY} rotate={rotate-90} color={value} />
+        translateX = Math.floor(800*Math.cos(toRadians(rotate+degree))) + centerPos.x - 150;
+        translateY = Math.floor(800*Math.sin(toRadians(rotate+degree))) + centerPos.y - 200;
+        return <Card translateX={translateX} translateY={translateY} rotate={rotate-90+degree} color={value} />
     });
-    console.log(position)
+    
     return (
         <div className="App"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
+            
         >
         {cards}
         </div>

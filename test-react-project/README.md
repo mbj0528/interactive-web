@@ -68,3 +68,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+e.pointerId 가 안된다. mouseEventDown 에서만 없다는 글.
+https://stackoverflow.com/questions/57566090/setpointercapture-behaves-differently-in-chrome-and-firefox
